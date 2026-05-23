@@ -147,50 +147,35 @@ function buildEmail(contactName) {
    API HELPERS
 ───────────────────────────────────────────────────────────────────────────── */
 async function parseContactsAI(raw) {
+  // Calls Vercel API route — Anthropic key stored securely server-side
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/parse-contacts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 2000,
-        messages: [{ role: "user", content: `Extract contacts from this spreadsheet data. Return ONLY a JSON array — no markdown, no explanation.
-Each object: {"name":"","email":"","phone":""}
-- name: full name exactly as written (e.g. "Ben" or "Ben Alderlieste") — never split or shorten it, preserve capitalisation
-- email: valid email or empty string
-- phone: cleaned phone number or empty string
-- Skip rows with no email AND no phone
-Data:\n${raw}` }],
-      }),
+      body: JSON.stringify({ raw }),
     });
     const data = await res.json();
-    const text = data.content?.find(b => b.type === "text")?.text || "[]";
-    return JSON.parse(text.replace(/```json|```/g, "").trim());
+    return data.contacts || [];
   } catch { return []; }
 }
 
 async function sendViaGmail(contact, htmlBody) {
-  const firstName = (contact.name || "").trim().split(" ")[0] || "there";
+  // Calls Vercel API route — Gmail credentials stored securely server-side
+  const raw = (contact.name || "").trim().split(/\s+/)[0] || "there";
+  const firstName = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
   const subject = HBH.subject.replace("{{first_name}}", firstName);
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        mcp_servers: [{ type: "url", url: "https://gmailmcp.googleapis.com/mcp/v1", name: "gmail-mcp" }],
-        messages: [{ role: "user", content: `Send this email using Gmail now:
-To: ${contact.email}
-Subject: ${subject}
-HTML body: ${htmlBody}
-Reply only "sent" or "failed".` }],
+        to: contact.email,
+        subject,
+        htmlBody,
       }),
     });
     const data = await res.json();
-    const text = data.content?.map(b => b.type === "text" ? b.text : "").join(" ").toLowerCase();
-    const ok = text.includes("sent") || text.includes("success") || (!text.includes("error") && !text.includes("fail"));
-    return { success: ok, note: ok ? "Sent" : "Failed" };
+    return { success: data.success === true, note: data.success ? "Sent" : "Failed" };
   } catch { return { success: false, note: "Error" }; }
 }
 

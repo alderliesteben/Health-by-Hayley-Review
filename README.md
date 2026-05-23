@@ -1,60 +1,72 @@
-# Health by Hayley — Review Manager
+# Health by Hayley — Review Manager v2
 
 Private internal tool for sending Google review request emails to clients.
+Emails sent via Gmail API from info@healthbyhayley.com.au.
 
-## Setup
+---
 
-### 1. Install dependencies
-```bash
-npm install
-```
+## Environment Variables
 
-### 2. Run locally
-```bash
-npm start
-```
-Opens at http://localhost:3000
+These must be added to Vercel — never commit them to GitHub.
 
-### 3. Build for production
-```bash
-npm run build
-```
+| Variable | Description |
+|---|---|
+| `GMAIL_CLIENT_ID` | From Google Cloud Console → Credentials |
+| `GMAIL_CLIENT_SECRET` | From Google Cloud Console → Credentials |
+| `GMAIL_REFRESH_TOKEN` | From OAuth Playground one-time flow |
+| `ANTHROPIC_API_KEY` | From console.anthropic.com → API Keys |
+
+### How to add them in Vercel:
+1. Go to your project on vercel.com
+2. Settings → Environment Variables
+3. Add each one above — set scope to **Production**, **Preview**, and **Development**
+4. Click Save
+5. Redeploy for changes to take effect
 
 ---
 
 ## Deploy to Vercel
 
-### Option A — GitHub (recommended)
-1. Push this repo to GitHub (keep it **private**)
-2. Go to [vercel.com](https://vercel.com) → Add New → Project
-3. Import the GitHub repo
-4. Vercel auto-detects Create React App — click **Deploy**
-5. Done. Your URL will be something like `hbh-review-manager.vercel.app`
-
-### Option B — Vercel CLI
+### Step 1 — Push to GitHub (keep repo PRIVATE)
 ```bash
-npm install -g vercel
-vercel
+npm install
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOURUSERNAME/hbh-review-manager.git
+git push -u origin main
+```
+
+### Step 2 — Import to Vercel
+1. vercel.com → Add New → Project
+2. Import the GitHub repo
+3. Before deploying — go to Environment Variables and add all 4 keys above
+4. Click Deploy
+
+---
+
+## Local development
+```bash
+npm install
+# Create a .env.local file with your keys:
+# GMAIL_CLIENT_ID=...
+# GMAIL_CLIENT_SECRET=...
+# GMAIL_REFRESH_TOKEN=...
+# ANTHROPIC_API_KEY=...
+npm start
 ```
 
 ---
 
+## Login
+- Email: hayley@healthbyhayley.com.au
+- Password: Sunshinechiro25
+
+---
+
 ## Custom domain (optional)
-To use `reviews.healthbyhayley.com.au`:
-1. Vercel dashboard → your project → Settings → Domains
-2. Add `reviews.healthbyhayley.com.au`
-3. Add the CNAME record Vercel gives you to your DNS provider
-4. Wait 5–30 minutes
-
----
-
-## Login credentials
-- **Email:** hayley@healthbyhayley.com.au
-- **Password:** Sunshinechiro25
-
----
-
-## Notes
-- The tool is set to `noindex` — it will not appear in search engines
-- Keep the GitHub repository **private** to protect the source code
-- Emails are sent via Gmail MCP through the Claude API
+To use reviews.healthbyhayley.com.au:
+1. Vercel → project → Settings → Domains
+2. Add reviews.healthbyhayley.com.au
+3. Add the CNAME record to your DNS provider
