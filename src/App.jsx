@@ -224,30 +224,9 @@ function Stepper({ step }) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   LOGIN PAGE
+   WELCOME PAGE
 ───────────────────────────────────────────────────────────────────────────── */
-function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-  const [shaking, setShaking] = useState(false);
-
-  const handleLogin = () => {
-    if (
-      email.trim().toLowerCase() === "hayley@healthbyhayley.com.au" &&
-      password === "Sunshinechiro25"
-    ) {
-      onLogin();
-    } else {
-      setError("Incorrect email or password. Please try again.");
-      setShaking(true);
-      setTimeout(() => setShaking(false), 500);
-    }
-  };
-
-  const handleKey = e => { if (e.key === "Enter") handleLogin(); };
-
+function WelcomePage({ onProceed }) {
   return (
     <div style={{
       minHeight: "100vh", background: "#FFF8BC",
@@ -258,103 +237,26 @@ function LoginPage({ onLogin }) {
         width: "100%", maxWidth: 420,
         background: "#FFFFFF", borderRadius: 20,
         boxShadow: "0 4px 24px rgba(41,52,72,0.10)",
-        overflow: "hidden",
-        animation: shaking ? "shake 0.4s ease" : "none",
+        overflow: "hidden", textAlign: "center",
       }}>
-        <style>{`
-          @keyframes shake {
-            0%,100%{transform:translateX(0)}
-            20%{transform:translateX(-8px)}
-            40%{transform:translateX(8px)}
-            60%{transform:translateX(-6px)}
-            80%{transform:translateX(6px)}
-          }
-        `}</style>
-
-        {/* Header */}
-        <div style={{ background: "#FFFFFF", padding: "36px 40px 28px", textAlign: "center", borderBottom: "1px solid #f0f0f0" }}>
-          <img src={LOGO} alt="Health by Hayley" style={{ height: 48, margin: "0 auto 16px", display: "block" }} />
-          <div style={{ display: "inline-block", background: "#E2F0F6", color: "#293448", fontSize: 11, fontWeight: 700, letterSpacing: "0.6px", textTransform: "uppercase", padding: "6px 14px", borderRadius: 999, marginBottom: 14 }}>
+        <div style={{ padding: "48px 40px 40px" }}>
+          <img src={LOGO} alt="Health by Hayley" style={{ height: 52, margin: "0 auto 24px", display: "block" }} />
+          <div style={{ fontSize: 20, fontWeight: 700, color: "#293448", marginBottom: 6, letterSpacing: "-0.3px" }}>
             Review Manager
           </div>
-          <div style={{ fontSize: 14, color: "#5A6478", lineHeight: 1.5 }}>
-            Sign in to access the<br />Health by Hayley review tool
+          <div style={{ fontSize: 14, color: "#5A6478", marginBottom: 36, lineHeight: 1.6 }}>
+            Client Review Tool
           </div>
-        </div>
-
-        {/* Form */}
-        <div style={{ padding: "32px 40px 36px" }}>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#5A6478", marginBottom: 6, letterSpacing: "0.5px", textTransform: "uppercase" }}>
-              Email address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => { setEmail(e.target.value); setError(""); }}
-              onKeyDown={handleKey}
-              placeholder="hayley@healthbyhayley.com.au"
-              style={{
-                width: "100%", boxSizing: "border-box", padding: "11px 14px",
-                fontSize: 14, fontFamily: "Arial, sans-serif", color: "#293448",
-                background: "#FAFAFA", border: "1px solid #D8E8F0",
-                borderRadius: 8, outline: "none",
-              }}
-              autoComplete="email"
-            />
-          </div>
-
-          <div style={{ marginBottom: 8 }}>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#5A6478", marginBottom: 6, letterSpacing: "0.5px", textTransform: "uppercase" }}>
-              Password
-            </label>
-            <div style={{ position: "relative" }}>
-              <input
-                type={showPw ? "text" : "password"}
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError(""); }}
-                onKeyDown={handleKey}
-                placeholder="••••••••••••••"
-                style={{
-                  width: "100%", boxSizing: "border-box", padding: "11px 44px 11px 14px",
-                  fontSize: 14, fontFamily: "Arial, sans-serif", color: "#293448",
-                  background: "#FAFAFA", border: "1px solid #D8E8F0",
-                  borderRadius: 8, outline: "none",
-                }}
-                autoComplete="current-password"
-              />
-              <button
-                onClick={() => setShowPw(v => !v)}
-                style={{
-                  position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
-                  background: "none", border: "none", cursor: "pointer",
-                  fontSize: 14, color: "#5A6478", padding: 2,
-                }}
-                tabIndex={-1}
-              >
-                {showPw ? "🙈" : "👁️"}
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div style={{ fontSize: 12, color: "#c0392b", background: "#fdecea", border: "1px solid #f5b8b4", borderRadius: 6, padding: "8px 12px", marginBottom: 16 }}>
-              {error}
-            </div>
-          )}
-
           <button
-            onClick={handleLogin}
+            onClick={onProceed}
             style={{
-              width: "100%", marginTop: error ? 0 : 16,
-              background: "#293448", color: "#FFFFFF",
-              border: "none", borderRadius: 999,
-              padding: "14px 0", fontSize: 15, fontWeight: 700,
-              fontFamily: "Arial, sans-serif", cursor: "pointer",
-              letterSpacing: "0.3px",
+              width: "100%", background: "#293448", color: "#FFFFFF",
+              border: "none", borderRadius: 999, padding: "14px 0",
+              fontSize: 15, fontWeight: 700, fontFamily: "Arial, sans-serif",
+              cursor: "pointer", letterSpacing: "0.3px",
             }}
           >
-            Sign in
+            Get Started →
           </button>
         </div>
       </div>
@@ -363,7 +265,7 @@ function LoginPage({ onLogin }) {
 }
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [paste, setPaste] = useState("");
   const [contacts, setContacts] = useState([]);
@@ -420,7 +322,7 @@ export default function App() {
   };
   const panel = { padding: 24, background: "#FFFFFF", fontFamily: "Arial, sans-serif" };
 
-  if (!loggedIn) return <LoginPage onLogin={() => setLoggedIn(true)} />;
+  if (!started) return <WelcomePage onProceed={() => setStarted(true)} />;
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: C.dark, background: "transparent" }}>
@@ -428,20 +330,10 @@ export default function App() {
       {/* HEADER */}
       <div style={{ background: C.yellow, padding: "16px 24px", display: "flex", alignItems: "center", gap: 14, borderBottom: `1px solid ${C.yellowDark}` }}>
         <img src={LOGO} alt="Health by Hayley" style={{ height: 44 }} />
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.dark, letterSpacing: ".3px" }}>Review Request Agent</div>
-          <div style={{ fontSize: 10, color: C.muted, letterSpacing: "1.2px", textTransform: "uppercase", marginTop: 2 }}>Health by Hayley</div>
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.dark, letterSpacing: ".3px" }}>Review Manager</div>
+          <div style={{ fontSize: 10, color: C.muted, letterSpacing: "1.2px", textTransform: "uppercase", marginTop: 2 }}>Client Review Tool</div>
         </div>
-        <button
-          onClick={() => setLoggedIn(false)}
-          style={{
-            background: "rgba(41,52,72,0.08)", border: "none", borderRadius: 999,
-            padding: "6px 14px", fontSize: 11, fontWeight: 700, color: C.muted,
-            cursor: "pointer", fontFamily: "Arial, sans-serif", letterSpacing: ".3px",
-          }}
-        >
-          Sign out
-        </button>
       </div>
 
       <Stepper step={step} />
